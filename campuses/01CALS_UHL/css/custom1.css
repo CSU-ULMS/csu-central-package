@@ -42,3 +42,8 @@ prm-logo .product-logo a:hover {
     text-transform:none;
     box-shadow: none;
 }
+
+/* changing menu to Sentence Case */
+prm-topbar .md-button {
+    text-transform: none;
+}
