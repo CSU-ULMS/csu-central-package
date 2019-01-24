@@ -1,10 +1,10 @@
 angular.module('multipleAnalytics', []);
-angular.module('multipleAnalytics').run(function ($rootScope, $interval, analyticsOptions, analyticsOptionsDefault) {
-    var enabled = analyticsOptions.hasOwnProperty("enabled") ? analyticsOptions.enabled : analyticsOptionsDefault.enabled;
-    var siteSource = analyticsOptions.hasOwnProperty("siteSource") ? analyticsOptions.siteSource : analyticsOptionsDefault.siteSource;
-    var siteId = analyticsOptions.hasOwnProperty("siteId") ? analyticsOptions.siteId : analyticsOptionsDefault.siteId;
-    var siteUrl = analyticsOptions.hasOwnProperty("siteUrl") ? analyticsOptions.siteUrl : analyticsOptionsDefault.siteUrl;
-    var defaultTitle = analyticsOptions.hasOwnProperty("defaultTitle") ? analyticsOptions.defaultTitle : analyticsOptionsDefault.defaultTitle;
+angular.module('multipleAnalytics').run(function ($rootScope, $interval, csuOptions, analyticsOptionsDefault) {
+    var enabled = csuOptions.hasOwnProperty("analyticsEnabled") ? csuOptions.analyticsEnabled : analyticsOptionsDefault.enabled;
+    var siteSource = csuOptions.hasOwnProperty("siteSource") ? csuOptions.siteSource : analyticsOptionsDefault.siteSource;
+    var siteId = csuOptions.hasOwnProperty("siteId") ? csuOptions.siteId : analyticsOptionsDefault.siteId;
+    var siteUrl = csuOptions.hasOwnProperty("siteUrl") ? csuOptions.siteUrl : analyticsOptionsDefault.siteUrl;
+    var defaultTitle = csuOptions.hasOwnProperty("defaultTitle") ? csuOptions.defaultTitle : analyticsOptionsDefault.defaultTitle;
   if(enabled) {
     if(siteId != '') {
       if(siteSource === 'ga') {
@@ -67,7 +67,7 @@ angular.module('multipleAnalytics').run(function ($rootScope, $interval, analyti
     });
   }
 });
-angular.module('multipleAnalytics').value('analyticsOptions', {}).value('analyticsOptionsDefault', {
+angular.module('multipleAnalytics').value('analyticsOptionsDefault', {
   enabled: false,
   siteSource: 'ga',
   siteId: '',
