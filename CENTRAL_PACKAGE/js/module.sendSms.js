@@ -198,10 +198,10 @@ angular.module('sendSms').component('ocaSendSms', {
   </div>
   <oca-send-sms-after parent-ctrl="$ctrl"></oca-send-sms-after>
   `,
-  controller: ['$http', 'smsCarriers', 'smsCarriersDefault', 'smsOptions', 'smsOptionsDefault', function ($http, smsCarriers, smsCarriersDefault, smsOptions, smsOptionsDefault) {
+  controller: ['$http', 'smsCarriers', 'smsCarriersDefault', 'csuOptions', 'smsOptionsDefault', function ($http, smsCarriers, smsCarriersDefault, csuOptions, smsOptionsDefault) {
     var _this = this;
 
-    this.noPrintFoundLabel = smsOptions.hasOwnProperty("noPrintFoundLabel") ? smsOptions.noPrintFoundLabel : smsOptionsDefault.noPrintFoundLabel;
+    this.noPrintFoundLabel = csuOptions.hasOwnProperty("noPrintFoundLabel") ? csuOptions.noPrintFoundLabel : smsOptionsDefault.noPrintFoundLabel;
     this.$onInit = function () {
       _this.carriers = angular.equals(smsCarriers, {}) ? smsCarriersDefault : smsCarriers;
       _this.carrier = _this.phoneNumber = _this.gCaptchaResponse = _this.statusMessage = '';
@@ -248,11 +248,11 @@ angular.module('sendSms').component('ocaSendSms', {
           message = title + '<br><br>' + holdings;
           console.log("SMS length: " + message.length);
         } else message += _this.noPrintFoundLabel;
-        $http.post(smsOptions.formUrl || smsOptionsDefault.formUrl, {
+        $http.post(csuOptions.formUrl || smsOptionsDefault.formUrl, {
           "action": "sms",
-          "from": smsOptions.fromEmail || smsOptionsDefault.fromEmail,
+          "from": csuOptions.fromEmail || smsOptionsDefault.fromEmail,
           "to": _this.phoneNumber + '@' + _this.carrier,
-          "subject": smsOptions.subject || smsOptionsDefault.subject,
+          "subject": csuOptions.smsSubject || smsOptionsDefault.subject,
           "message": message,
           "gCaptchaResponse": _this.gCaptchaResponse
         }).then(function (msg) {
@@ -271,9 +271,9 @@ angular.module('sendSms').component('ocaSendSms', {
       }
     };
   }]
-}).run(['$templateCache', 'smsAction', 'smsActionDefault', 'smsOptions', 'smsOptionsDefault', function ($templateCache, smsAction, smsActionDefault, smsOptions, smsOptionsDefault) {
-  if (smsOptions.hasOwnProperty("enabled") ? smsOptions.enabled : smsOptionsDefault.enabled) {
-    $templateCache.put('components/search/actions/actionContainer/action-container.html', '<oca-send-sms ng-if="($ctrl.actionName===\'' + (smsAction.name || smsActionDefault.name) + '\')" finished-sms-event="$ctrl.throwCloseTabsEvent()" item="::$ctrl.item"></oca-send-sms>' + $templateCache.get('components/search/actions/actionContainer/action-container.html'));
+}).run(['$templateCache', 'csuOptions', 'smsActionDefault', 'csuOptions', 'smsOptionsDefault', function ($templateCache, csuOptions, smsActionDefault, csuOptions, smsOptionsDefault) {
+  if (csuOptions.hasOwnProperty("smsEnabled") ? csuOptions.smsEnabled : smsOptionsDefault.enabled) {
+    $templateCache.put('components/search/actions/actionContainer/action-container.html', '<oca-send-sms ng-if="($ctrl.actionName===\'' + (csuOptions.name || smsActionDefault.name) + '\')" finished-sms-event="$ctrl.throwCloseTabsEvent()" item="::$ctrl.item"></oca-send-sms>' + $templateCache.get('components/search/actions/actionContainer/action-container.html'));
     $templateCache.put('components/search/actions/action-list.html', $templateCache.get('components/search/actions/action-list.html').replace('</md-nav-item>', '</md-nav-item><sms-action />'));
   }
 }]);
@@ -282,13 +282,13 @@ angular.module('sendSms').component('smsAction', {
   require: {
     prmActionCtrl: '^prmActionList'
   },
-  controller: ['customActions', 'smsAction', 'smsActionDefault', 'smsOptions', function (customActions, smsAction, smsActionDefault, smsOptions) {
+  controller: ['customActions', 'smsAction', 'smsActionDefault', 'csuOptions', function (customActions, smsAction, smsActionDefault, csuOptions) {
     var _this2 = this;
 
-    smsAction.name = smsOptions.name || smsActionDefault.name;
-    smsAction.label = smsOptions.label || smsActionDefault.label;
-    smsAction.index = smsOptions.index || smsActionDefault.index;
-    smsAction.icon = smsOptions.icon || smsActionDefault.icon;
+    smsAction.name = csuOptions.name || smsActionDefault.name;
+    smsAction.label = csuOptions.label || smsActionDefault.label;
+    smsAction.index = csuOptions.index || smsActionDefault.index;
+    smsAction.icon = csuOptions.icon || smsActionDefault.icon;
 
     this.$onInit = function () {
       return customActions.addAction(smsAction, _this2.prmActionCtrl);
