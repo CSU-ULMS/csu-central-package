@@ -92,20 +92,20 @@ angular.module('reportProblem').component('ocaReportProblem', {
     </md-content>
   </div>
   `,
-  controller: ['$location', '$httpParamSerializer', '$http', 'reportProblem', 'reportProblemDefault', '$timeout', '$scope', function ($location, $httpParamSerializer, $http, reportProblem, reportProblemDefault, $timeout, $scope) {
+  controller: ['$location', '$httpParamSerializer', '$http', 'csuOptions', 'reportProblemDefault', '$timeout', '$scope', function ($location, $httpParamSerializer, $http, csuOptions, reportProblemDefault, $timeout, $scope) {
     var _this = this;
 
-    this.enabled = reportProblem.hasOwnProperty("enabled") ? reportProblem.enabled : reportProblemDefault.enabled;
-    this.requireName = reportProblem.hasOwnProperty("requireName") ? reportProblem.requireName : reportProblemDefault.requireName;
-    this.requireEmail = reportProblem.hasOwnProperty("requireEmail") ? reportProblem.requireEmail : reportProblemDefault.requireEmail;
-    this.requireDesc = reportProblem.hasOwnProperty("requireDesc") ? reportProblem.requireDesc : reportProblemDefault.requireDesc;
-    this.format = reportProblem.hasOwnProperty("format") ? reportProblem.format : reportProblemDefault.format;
-    this.messageText = this.messageText || (reportProblem.hasOwnProperty("messageText") ? reportProblem.messageText : reportProblemDefault.messageText);
-    this.buttonText = this.buttonText || (reportProblem.hasOwnProperty("buttonText") ? reportProblem.buttonText : reportProblemDefault.buttonText);
-    this.submitText = this.submitText || (reportProblem.hasOwnProperty("submitText") ? reportProblem.submitText : reportProblemDefault.submitText);
-    this.reportUrl = this.reportUrl || (reportProblem.hasOwnProperty("reportUrl") ? reportProblem.reportUrl : reportProblemDefault.reportUrl);
-    this.reportVendor = this.reportVendor || (reportProblem.hasOwnProperty("reportVendor") ? reportProblem.reportVendor : reportProblemDefault.reportVendor);
-    this.alertLocation = this.alertLocation || (reportProblem.hasOwnProperty("alertLocation") ? reportProblem.alertLocation : reportProblemDefault.alertLocation);
+    this.enabled = csuOptions.hasOwnProperty("reportProblemEnabled") ? csuOptions.reportProblemEnabled : reportProblemDefault.enabled;
+    this.requireName = csuOptions.hasOwnProperty("requireName") ? csuOptions.requireName : reportProblemDefault.requireName;
+    this.requireEmail = csuOptions.hasOwnProperty("requireEmail") ? csuOptions.requireEmail : reportProblemDefault.requireEmail;
+    this.requireDesc = csuOptions.hasOwnProperty("requireDesc") ? csuOptions.requireDesc : reportProblemDefault.requireDesc;
+    this.format = csuOptions.hasOwnProperty("format") ? csuOptions.format : reportProblemDefault.format;
+    this.messageText = this.messageText || (csuOptions.hasOwnProperty("messageText") ? csuOptions.messageText : reportProblemDefault.messageText);
+    this.buttonText = this.buttonText || (csuOptions.hasOwnProperty("buttonText") ? csuOptions.buttonText : reportProblemDefault.buttonText);
+    this.submitText = this.submitText || (csuOptions.hasOwnProperty("submitText") ? csuOptions.submitText : reportProblemDefault.submitText);
+    this.reportUrl = this.reportUrl || (csuOptions.hasOwnProperty("reportUrl") ? csuOptions.reportUrl : reportProblemDefault.reportUrl);
+    this.reportVendor = this.reportVendor || (csuOptions.hasOwnProperty("reportVendor") ? csuOptions.reportVendor : reportProblemDefault.reportVendor);
+    this.alertLocation = this.alertLocation || (csuOptions.hasOwnProperty("alertLocation") ? csuOptions.alertLocation : reportProblemDefault.alertLocation);
     this.showLocations = ['/fulldisplay', '/openurl'];
     this.$onInit = function () {
       this.targetUrl = this.reportUrl + $httpParamSerializer($location.search());
@@ -147,9 +147,9 @@ angular.module('reportProblem').component('ocaReportProblem', {
         var params = {
           'reportVendor': _this.reportVendor,
           'format': _this.format,
-          'subject': reportProblem.hasOwnProperty("subject") ? reportProblem.subject : reportProblemDefault.subject,
+          'subject': csuOptions.hasOwnProperty("reportProblemSubject") ? csuOptions.reportProblemSubject : reportProblemDefault.subject,
           'name': _this.name,
-          'from': _this.email ? _this.email : (reportProblem.hasOwnProperty("from") ? reportProblem.from : reportProblemDefault.from),
+          'from': _this.email ? _this.email : (csuOptions.hasOwnProperty("reportProblemFrom") ? csuOptions.reportProblemFrom : reportProblemDefault.from),
           'phone': _this.phoneNumber,
           'description': _this.description,
           'gCaptchaResponse': _this.gCaptchaResponse,
@@ -179,13 +179,13 @@ angular.module('reportProblem').component('ocaReportProblem', {
         });
         if (_this.reportVendor === 'libanswers') {
           params.action = 'libanswers';
-          params.instid = reportProblem.hasOwnProperty("instid") ? reportProblem.instid : reportProblemDefault.instid;
-          params.quid = reportProblem.hasOwnProperty("quid") ? reportProblem.quid : reportProblemDefault.quid;
-          params.qlog = reportProblem.hasOwnProperty("qlog") ? reportProblem.qlog : reportProblemDefault.qlog;
-          params.source = reportProblem.hasOwnProperty("source") ? reportProblem.source : reportProblemDefault.source;
+          params.instid = csuOptions.hasOwnProperty("instid") ? csuOptions.instid : reportProblemDefault.instid;
+          params.quid = csuOptions.hasOwnProperty("quid") ? csuOptions.quid : reportProblemDefault.quid;
+          params.qlog = csuOptions.hasOwnProperty("qlog") ? csuOptions.qlog : reportProblemDefault.qlog;
+          params.source = csuOptions.hasOwnProperty("source") ? csuOptions.source : reportProblemDefault.source;
         } else if (_this.reportVendor === 'email') {
           params.action = 'problem-email';
-          params.to = reportProblem.hasOwnProperty("to") ? reportProblem.to : reportProblemDefault.to;
+          params.to = csuOptions.hasOwnProperty("to") ? csuOptions.to : reportProblemDefault.to;
         }
         $http.post(_this.reportUrl, params).then(function (msg) {
           _this.setStatusCode(msg.status);
@@ -213,16 +213,16 @@ angular.module('reportProblem').component('ocaReportProblem', {
       }
     };
   }]
-}).run(['$templateCache', 'reportProblem', 'reportProblemDefault', function ($templateCache, reportProblem, reportProblemDefault) {
-  if (reportProblem.hasOwnProperty("enabledDefault") ? reportProblem.enabledDefault : reportProblemDefault.enabledDefault) {
-    var alertLocation = (reportProblem.hasOwnProperty("alertLocation") ? reportProblem.alertLocation : reportProblemDefault.alertLocation);
+}).run(['$templateCache', 'csuOptions', 'reportProblemDefault', function ($templateCache, csuOptions, reportProblemDefault) {
+  if (csuOptions.hasOwnProperty("reportProblemEnabledDefault") ? csuOptions.reportProblemEnabledDefault : reportProblemDefault.enabledDefault) {
+    var alertLocation = (csuOptions.hasOwnProperty("alertLocation") ? csuOptions.alertLocation : reportProblemDefault.alertLocation);
     $templateCache.put('components/search/fullView/fullViewServiceContainer/full-view-service-container.html', $templateCache.get('components/search/fullView/fullViewServiceContainer/full-view-service-container.html')
     .replace('</' + alertLocation + '>', '</' + alertLocation + '><oca-report-problem ng-if="$ctrl.index == 1 && $ctrl.service.serviceName===\'activate\'" parent-ctrl="$ctrl"></oca-report-problem>') // get/view it
     .replace('<prm-full-view-service-container-after', '<oca-report-problem ng-if="$ctrl.index == 1 && $ctrl.service.serviceName!==\'activate\'" parent-ctrl="$ctrl"></oca-report-problem><prm-full-view-service-container-after')); // everything else catch-all
   }
 }]);
 
-angular.module('reportProblem').value('reportProblem', {}).value('reportProblemDefault', {
+angular.module('reportProblem').value('reportProblemDefault', {
   enabled: false,
   enabledDefault: true,
   requireName: false,
